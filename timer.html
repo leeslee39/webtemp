@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>타이머</title>
+  <style>
+    /* 기본 스타일 설정 */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Noto Sans KR", sans-serif;
+      background: #f7f7f7;
+      color: #333;
+    }
+    .container {
+      max-width: 400px;
+      margin: 70px auto;
+      text-align: center;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 30px;
+    }
+    h1 {
+      margin-bottom: 30px;
+    }
+    .timer-display {
+      font-size: 60px;
+      font-weight: bold;
+      margin-bottom: 30px;
+    }
+    .btn {
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background: #4caf50;
+      color: #fff;
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 0 5px;
+      transition: background 0.3s ease;
+    }
+    .btn:hover {
+      background: #45a049;
+    }
+    /* 시간 설정 버튼 컨테이너 */
+    .time-setters {
+      margin-bottom: 20px;
+    }
+    /* 시작, 일시정지, 초기화 버튼 컨테이너 */
+    .controls {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>타이머</h1>
+    <div class="timer-display" id="timer">00:00</div>
+    <!-- 시간 설정 버튼 -->
+    <div class="time-setters">
+      <button class="btn" onclick="addMinute(1)">+1분</button>
+      <button class="btn" onclick="addMinute(5)">+5분</button>
+      <button class="btn" onclick="addSecond(10)">+10초</button>
+    </div>
+    <!-- 타이머 제어 버튼 -->
+    <div class="controls">
+      <button class="btn" onclick="startTimer()">시작</button>
+      <button class="btn" onclick="pauseTimer()">일시정지</button>
+      <button class="btn" onclick="resetTimer()">초기화</button>
+    </div>
+  </div>
+  
+  <script>
+    let totalSeconds = 0;       // 총 시간(초)
+    let intervalId = null;      // setInterval을 담을 변수
+
+    // 타이머 화면에 보여주기
+    function displayTime(seconds) {
+      const min = Math.floor(seconds / 60);
+      const sec = seconds % 60;
+      document.getElementById('timer').textContent =
+        String(min).padStart(2, '0') + ':' + String(sec).padStart(2, '0');
+    }
+
+    // 타이머 시작
+    function startTimer() {
+      if (intervalId) return;  // 이미 동작 중이면 중복 시작 방지
+      intervalId = setInterval(function() {
+        if (totalSeconds > 0) {
+          totalSeconds--;
+          displayTime(totalSeconds);
+        } else {
+          // 타이머가 0이 되면 자동 일시정지
+          pauseTimer();
+        }
+      }, 1000);
+    }
+
+    // 타이머 일시정지
+    function pauseTimer() {
+      clearInterval(intervalId);
+      intervalId = null;
+    }
+
+    // 타이머 초기화
+    function resetTimer() {
+      pauseTimer();
+      totalSeconds = 0;
+      displayTime(totalSeconds);
+    }
+
+    // 분 추가
+    function addMinute(min) {
+      totalSeconds += min * 60;
+      displayTime(totalSeconds);
+    }
+
+    // 초 추가
+    function addSecond(sec) {
+      totalSeconds += sec;
+      displayTime(totalSeconds);
+    }
+  </script>
+</body>
+</html>
